@@ -15,6 +15,8 @@
             --brand-orange: #f59e0b;
             --brand-orange-dark: #d97706;
             --brand-gold: #fbbf24;
+            --whatsapp-green: #25D366;
+            --whatsapp-dark: #128C7E;
             --bg-color: #f1f5f9;
             --card-bg: #ffffff;
             --text-title: #0f172a;
@@ -27,7 +29,6 @@
             --radius-lg: 20px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
             --shadow-card: 0 4px 12px rgba(15, 23, 42, 0.05);
-            --shadow-active: 0 8px 24px rgba(245, 158, 11, 0.2);
         }
 
         * {
@@ -185,7 +186,7 @@
             margin-bottom: 6px;
         }
 
-        .meta-field input {
+        .meta-field input, .meta-field select {
             width: 100%;
             height: 46px;
             padding: 0 14px;
@@ -199,10 +200,24 @@
             transition: all 0.2s ease;
         }
 
-        .meta-field input:focus {
+        .meta-field select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+            padding-left: 36px;
+        }
+
+        body.lang-en .meta-field select {
+            background-position: right 14px center;
+            padding-right: 36px;
+            padding-left: 14px;
+        }
+
+        .meta-field input:focus, .meta-field select:focus {
             outline: none;
             border-color: var(--brand-orange);
-            background: #ffffff;
+            background-color: #ffffff;
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
         }
 
@@ -436,12 +451,12 @@
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
         }
 
-        /* Action Buttons Area */
+        /* Action Buttons Area (PDF + WhatsApp) */
         .btn-group {
             margin-top: 24px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn-download-pdf {
@@ -468,12 +483,37 @@
             background: #b91c1c;
         }
 
+        .btn-whatsapp {
+            width: 100%;
+            height: 52px;
+            background: #25D366;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 28px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35);
+            font-family: inherit;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-whatsapp:active {
+            transform: scale(0.98);
+            background: #1eb956;
+        }
+
         .btn-reset-form {
             width: 100%;
-            height: 44px;
+            height: 42px;
             background: #ffffff;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             border-radius: 28px;
             border: 1.5px solid var(--border-color);
@@ -490,7 +530,6 @@
 
         /* =======================================================
            STRICT NATIVE BROWSER PRINT / PDF ENGINE
-           (Eliminates cutouts, blurriness, or broken Arabic fonts)
            ======================================================= */
         @media print {
             @page {
@@ -553,7 +592,7 @@
                 gap: 10px !important;
             }
 
-            .meta-field input {
+            .meta-field input, .meta-field select {
                 background: #ffffff !important;
                 border: 1px solid #94a3b8 !important;
                 height: 34px !important;
@@ -668,17 +707,34 @@
             </p>
         </div>
 
-        <!-- Form Elements -->
+        <!-- Form Elements (Pure Client-Side, No Online Form Submissions) -->
         <form id="evaluationForm" onsubmit="event.preventDefault(); printOrSavePDF();">
             
             <!-- Meta Information -->
             <div class="meta-card">
                 <div class="meta-field">
                     <label>
-                        <span class="lang-ar-text">اسم الفرع / المتجر:</span>
-                        <span class="lang-en-text">Store / Branch Name:</span>
+                        <span class="lang-ar-text">اختر الفرع / المتجر:</span>
+                        <span class="lang-en-text">Select Store / Branch:</span>
                     </label>
-                    <input type="text" id="branch_name" required placeholder="مثال: فرع عبدون / Abdoun">
+                    <select id="branch_name" required>
+                        <option value="" disabled selected>-- اختر الفرع من القائمة --</option>
+                        <option value="صويفية (1) - Sweifieh 1">صويفية (1) / Sweifieh (1)</option>
+                        <option value="صويفية (2) - Sweifieh 2">صويفية (2) / Sweifieh (2)</option>
+                        <option value="العبدلي - Abdali">العبدلي / Abdali</option>
+                        <option value="عبدون - Abdoun">عبدون / Abdoun</option>
+                        <option value="الرابية - Rabieh">الرابية / Rabieh</option>
+                        <option value="الجبيهة - Jubeiha">الجبيهة / Jubeiha</option>
+                        <option value="طبربور - Tabarbour">طبربور / Tabarbour</option>
+                        <option value="المقابلين - Muqabalain">المقابلين / Muqabalain</option>
+                        <option value="خلدا - Khalda">خلدا / Khalda</option>
+                        <option value="اربد - Irbid">اربد / Irbid</option>
+                        <option value="الزرقاء - Zarqa">الزرقاء / Zarqa</option>
+                        <option value="السلط - Salt">السلط / Salt</option>
+                        <option value="مادبا - Madaba">مادبا / Madaba</option>
+                        <option value="الكرك - Karak">الكرك / Karak</option>
+                        <option value="العقبة - Aqaba">العقبة / Aqaba</option>
+                    </select>
                 </div>
                 <div class="meta-field">
                     <label>
@@ -977,13 +1033,23 @@
                     <textarea id="comments" placeholder="أي تفاصيل أو وقائع أخرى تخص الزيارة..."></textarea>
                 </div>
 
-                <!-- Buttons Area -->
+                <!-- Buttons Area (PDF + WhatsApp Only) -->
                 <div class="btn-group no-print">
+                    <!-- WhatsApp Share Button -->
+                    <button type="button" class="btn-whatsapp" onclick="shareViaWhatsApp()">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.072-1.847-.432-1.393-.578-2.316-2.007-2.385-2.1-.069-.093-.564-.75-.564-1.429 0-.679.356-1.013.483-1.15.127-.138.278-.172.371-.172.093 0 .186.001.267.005.086.004.202-.033.316.241.117.282.404.985.44 1.057.036.073.06.158.012.254-.048.096-.073.156-.144.239-.073.083-.153.185-.219.248-.073.07-.15.146-.065.291.085.145.378.624.811 1.01.558.497 1.028.65 1.174.723.146.073.231.061.317-.038.086-.098.369-.43.468-.578.099-.148.198-.124.333-.074.135.05 1.029.485 1.206.573.177.089.296.133.34.207.045.074.045.43-.099.835zm-3.423-10.416c-5.522 0-10 4.477-10 10 0 1.765.459 3.424 1.263 4.871l-1.871 6.832 6.99-1.833c1.396.762 2.99 1.191 4.618 1.191 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10z"/></svg>
+                        <span class="lang-ar-text">مشاركة ملخص التقرير عبر واتساب</span>
+                        <span class="lang-en-text">Share Summary on WhatsApp</span>
+                    </button>
+
+                    <!-- PDF Download Button -->
                     <button type="button" class="btn-download-pdf" onclick="printOrSavePDF()">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span class="lang-ar-text">توليد وحفظ التقرير PDF فائق الدقة</span>
-                        <span class="lang-en-text">Save High-Quality PDF</span>
+                        <span class="lang-ar-text">تنزيل التقرير كـ PDF فائق الدقة</span>
+                        <span class="lang-en-text">Download High-Quality PDF</span>
                     </button>
+
+                    <!-- Reset Form Button -->
                     <button type="reset" class="btn-reset-form">
                         <span class="lang-ar-text">إعادة تعيين النموذج</span>
                         <span class="lang-en-text">Reset Form</span>
@@ -994,7 +1060,7 @@
     </div>
 
     <script>
-        // Set today's date automatically
+        // Auto set current date & time
         window.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -1018,24 +1084,69 @@
             }
         }
 
-        // Native High-Precision PDF Generation:
-        // Uses native browser vector print (window.print) which preserves 100% sharp fonts,
-        // flawless Arabic typesetting, and zero canvas distortion on Android, iPhone, and Desktop.
+        // Native Browser Vector PDF export
         function printOrSavePDF() {
-            const branch = document.getElementById('branch_name').value.trim() || 'Store';
+            const branchSelect = document.getElementById('branch_name');
+            const branch = branchSelect.options[branchSelect.selectedIndex]?.text.split('/')[0].trim() || 'Store';
             const date = new Date().toISOString().slice(0, 10);
             const originalTitle = document.title;
             
-            // Set dynamic PDF file name for browser Save as PDF
             document.title = `Evaluation_${branch}_${date}`;
-            
-            // Trigger native print / PDF export
             window.print();
             
-            // Restore title
             setTimeout(() => {
                 document.title = originalTitle;
             }, 1500);
+        }
+
+        // WhatsApp Share Generator
+        function shareViaWhatsApp() {
+            const branchSelect = document.getElementById('branch_name');
+            const branch = branchSelect.options[branchSelect.selectedIndex]?.text || 'غير محدد';
+            const staff = document.getElementById('staff_name').value.trim() || 'غير محدد';
+            const visitDate = document.getElementById('visit_date').value || 'غير محدد';
+            const score = document.getElementById('overall_score').value || '__';
+            const strengths = document.getElementById('strengths').value.trim() || 'لا يوجد';
+            const improvements = document.getElementById('improvements').value.trim() || 'لا يوجد';
+            const comments = document.getElementById('comments').value.trim() || 'لا يوجد';
+
+            // Check selected answers for quick metrics
+            const getVal = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value.split('(')[0].trim() : 'لم يُحدد';
+            };
+
+            const text = 
+`📋 *تقرير تقييم زيارة فرع (Mystery Shopper)*
+🏢 *الفرع:* ${branch}
+👤 *الموظف:* ${staff}
+📅 *التاريخ والوقت:* ${visitDate}
+
+⭐ *الدرجة الإجمالية:* ${score} / 10
+
+📌 *ملخص التقييم السريع:*
+1. التعامل مع الزبون: ${getVal('q1')}
+2. المعرفة بالمنتجات: ${getVal('q2')}
+3. الأسعار والعروض: ${getVal('q3')}
+4. الأسئلة والاحتياج: ${getVal('q4')}
+5. فهم الاحتياج: ${getVal('q5')}
+6. تقديم المنتج: ${getVal('q6')}
+7. اقتراح البدائل: ${getVal('q7')}
+8. الرد على الاستفسارات: ${getVal('q8')}
+9. معالجة الاعتراضات: ${getVal('q9')}
+10. مهارة البيع والإغلاق: ${getVal('q10')}
+
+💪 *نقاط القوة:*
+${strengths}
+
+⚠️ *مجالات التحسين:*
+${improvements}
+
+📝 *ملاحظات إضافية:*
+${comments}`;
+
+            const url = "https://wa.me/?text=" + encodeURIComponent(text);
+            window.open(url, '_blank');
         }
     </script>
 </body>
