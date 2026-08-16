@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نموذج تقييم زيارة فرع - Store Visit Evaluation</title>
     <!-- Google Fonts with high legibility -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,9 +12,9 @@
         :root {
             --primary: #0f172a;
             --primary-light: #1e293b;
-            --brand-orange: #f59e0b;
-            --brand-orange-dark: #d97706;
-            --brand-gold: #fbbf24;
+            --brand-orange: #f43131;
+            --brand-orange-dark: #c91f28;
+            --brand-gold: #ff6666;
             --whatsapp-green: #25D366;
             --whatsapp-dark: #128C7E;
             --bg-color: #f1f5f9;
@@ -40,7 +40,9 @@
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at 12% 0%, rgba(244, 49, 49, 0.10), transparent 28rem),
+                var(--bg-color);
             color: var(--text-body);
             min-height: 100vh;
             padding: 16px 12px 60px;
@@ -462,7 +464,7 @@
         .btn-download-pdf {
             width: 100%;
             height: 52px;
-            background: #dc2626;
+            background: var(--brand-orange);
             color: #ffffff;
             font-size: 16px;
             font-weight: 800;
@@ -473,14 +475,14 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+            box-shadow: 0 6px 16px rgba(244, 49, 49, 0.3);
             font-family: inherit;
             transition: all 0.2s ease;
         }
 
         .btn-download-pdf:active {
             transform: scale(0.98);
-            background: #b91c1c;
+            background: var(--brand-orange-dark);
         }
 
         .btn-whatsapp {
@@ -528,6 +530,147 @@
         body.lang-en .lang-en-text { display: inline; }
         body.lang-en .lang-ar-text { display: none; }
 
+        .export-status {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            place-items: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.56);
+            backdrop-filter: blur(5px);
+        }
+
+        .export-status.show { display: grid; }
+
+        .export-status-card {
+            width: min(330px, 100%);
+            padding: 24px;
+            border-radius: 18px;
+            background: #ffffff;
+            color: var(--text-title);
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+            font-weight: 800;
+        }
+
+        .loader {
+            width: 38px;
+            height: 38px;
+            margin: 0 auto 14px;
+            border: 4px solid #fee2e2;
+            border-top-color: var(--brand-orange);
+            border-radius: 50%;
+            animation: spin .75s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed;
+            z-index: 10000;
+            left: 50%;
+            bottom: 22px;
+            width: min(420px, calc(100% - 28px));
+            padding: 13px 16px;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #ffffff;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, .28);
+            opacity: 0;
+            transform: translate(-50%, 18px);
+            pointer-events: none;
+            transition: .25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        /* Fixed A4 capture layout used by the generated PDF. */
+        body.pdf-export-mode {
+            background: #ffffff !important;
+            padding: 0 !important;
+        }
+
+        body.pdf-export-mode #reportArea {
+            width: 794px !important;
+            max-width: 794px !important;
+            padding: 28px 34px !important;
+            margin: 0 !important;
+            background: #ffffff !important;
+        }
+
+        body.pdf-export-mode .no-print,
+        body.pdf-export-mode .top-bar,
+        body.pdf-export-mode .btn-group {
+            display: none !important;
+        }
+
+        body.pdf-export-mode .header-card {
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            box-shadow: none !important;
+        }
+
+        body.pdf-export-mode .logo-container img { max-height: 52px !important; }
+        body.pdf-export-mode .header-card h1 { font-size: 20px !important; }
+        body.pdf-export-mode .header-card p.subtitle { font-size: 11px !important; }
+
+        body.pdf-export-mode .meta-card {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 10px !important;
+            padding: 12px !important;
+            margin-bottom: 12px !important;
+            box-shadow: none !important;
+        }
+
+        body.pdf-export-mode .meta-field input,
+        body.pdf-export-mode .meta-field select {
+            height: 36px !important;
+            font-size: 11px !important;
+            background: #ffffff !important;
+        }
+
+        body.pdf-export-mode .section-badge { margin: 12px 0 8px !important; }
+        body.pdf-export-mode .question-card {
+            padding: 10px 12px !important;
+            margin-bottom: 8px !important;
+            box-shadow: none !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+        }
+
+        body.pdf-export-mode .q-header { margin-bottom: 8px !important; }
+        body.pdf-export-mode .q-content h3 { font-size: 13px !important; }
+        body.pdf-export-mode .q-content p { font-size: 10px !important; }
+        body.pdf-export-mode .rating-grid {
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 5px !important;
+        }
+
+        body.pdf-export-mode .rating-chip {
+            min-height: 28px !important;
+            padding: 4px !important;
+            font-size: 9px !important;
+        }
+
+        body.pdf-export-mode .overall-card {
+            padding: 14px !important;
+            box-shadow: none !important;
+            break-inside: auto !important;
+            page-break-inside: auto !important;
+        }
+
+        body.pdf-export-mode .score-banner { padding: 10px 14px !important; margin-bottom: 10px !important; }
+        body.pdf-export-mode .textarea-box { margin-bottom: 10px !important; }
+        body.pdf-export-mode .textarea-box textarea { min-height: 58px !important; font-size: 10px !important; }
+
         /* =======================================================
            STRICT NATIVE BROWSER PRINT / PDF ENGINE
            ======================================================= */
@@ -559,7 +702,7 @@
 
             .header-card {
                 border: 1px solid #94a3b8 !important;
-                border-top: 5px solid #d97706 !important;
+                border-top: 5px solid #f43131 !important;
                 box-shadow: none !important;
                 padding: 14px !important;
                 margin-bottom: 14px !important;
@@ -695,7 +838,7 @@
         <!-- Header Card with Logo -->
         <div class="header-card">
             <div class="logo-container">
-                <img src="https://raw.githubusercontent.com/mahmoudnutritionjo-art/Visit-Evaluation/main/logo2.png" alt="Company Logo" crossorigin="anonymous">
+                <img src="logo.png" alt="First Nutrition">
             </div>
             <h1>
                 <span class="lang-ar-text">نموذج تقييم زيارة محل مكملات غذائية</span>
@@ -708,7 +851,7 @@
         </div>
 
         <!-- Form Elements (Pure Client-Side, No Online Form Submissions) -->
-        <form id="evaluationForm" onsubmit="event.preventDefault(); printOrSavePDF();">
+        <form id="evaluationForm" onsubmit="event.preventDefault(); downloadPDF();">
             
             <!-- Meta Information -->
             <div class="meta-card">
@@ -717,31 +860,14 @@
                         <span class="lang-ar-text">اختر الفرع / المتجر:</span>
                         <span class="lang-en-text">Select Store / Branch:</span>
                     </label>
-                    <select id="branch_name" required>
-                        <option value="" disabled selected>-- اختر الفرع من القائمة --</option>
-                        <option value="صويفية (1) - Sweifieh 1">صويفية (1) / Sweifieh (1)</option>
-                        <option value="صويفية (2) - Sweifieh 2">صويفية (2) / Sweifieh (2)</option>
-                        <option value="العبدلي - Abdali">العبدلي / Abdali</option>
-                        <option value="عبدون - Abdoun">عبدون / Abdoun</option>
-                        <option value="الرابية - Rabieh">الرابية / Rabieh</option>
-                        <option value="الجبيهة - Jubeiha">الجبيهة / Jubeiha</option>
-                        <option value="طبربور - Tabarbour">طبربور / Tabarbour</option>
-                        <option value="المقابلين - Muqabalain">المقابلين / Muqabalain</option>
-                        <option value="خلدا - Khalda">خلدا / Khalda</option>
-                        <option value="اربد - Irbid">اربد / Irbid</option>
-                        <option value="الزرقاء - Zarqa">الزرقاء / Zarqa</option>
-                        <option value="السلط - Salt">السلط / Salt</option>
-                        <option value="مادبا - Madaba">مادبا / Madaba</option>
-                        <option value="الكرك - Karak">الكرك / Karak</option>
-                        <option value="العقبة - Aqaba">العقبة / Aqaba</option>
-                    </select>
+                    <select id="branch_name" required aria-label="اختر الفرع"></select>
                 </div>
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">اسم الموظف المعني:</span>
                         <span class="lang-en-text">Staff Member Name:</span>
                     </label>
-                    <input type="text" id="staff_name" placeholder="اسم الموظف أو صفته...">
+                    <input type="text" id="staff_name" placeholder="اسم الموظف أو صفته..." autocomplete="off">
                 </div>
                 <div class="meta-field">
                     <label>
@@ -1004,7 +1130,7 @@
                         <span class="lang-en-text">Overall Final Score:</span>
                     </div>
                     <div class="score-banner-input-wrap">
-                        <input type="number" id="overall_score" min="0" max="10" step="0.5" placeholder="10">
+                        <input type="number" id="overall_score" min="0" max="10" step="0.25" placeholder="0" readonly aria-label="الدرجة الإجمالية">
                         <span class="denom">/ 10</span>
                     </div>
                 </div>
@@ -1036,16 +1162,16 @@
                 <!-- Buttons Area (PDF + WhatsApp Only) -->
                 <div class="btn-group no-print">
                     <!-- WhatsApp Share Button -->
-                    <button type="button" class="btn-whatsapp" onclick="shareViaWhatsApp()">
+                    <button type="button" class="btn-whatsapp" onclick="sharePDF()">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.072-1.847-.432-1.393-.578-2.316-2.007-2.385-2.1-.069-.093-.564-.75-.564-1.429 0-.679.356-1.013.483-1.15.127-.138.278-.172.371-.172.093 0 .186.001.267.005.086.004.202-.033.316.241.117.282.404.985.44 1.057.036.073.06.158.012.254-.048.096-.073.156-.144.239-.073.083-.153.185-.219.248-.073.07-.15.146-.065.291.085.145.378.624.811 1.01.558.497 1.028.65 1.174.723.146.073.231.061.317-.038.086-.098.369-.43.468-.578.099-.148.198-.124.333-.074.135.05 1.029.485 1.206.573.177.089.296.133.34.207.045.074.045.43-.099.835zm-3.423-10.416c-5.522 0-10 4.477-10 10 0 1.765.459 3.424 1.263 4.871l-1.871 6.832 6.99-1.833c1.396.762 2.99 1.191 4.618 1.191 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10z"/></svg>
-                        <span class="lang-ar-text">مشاركة ملخص التقرير عبر واتساب</span>
-                        <span class="lang-en-text">Share Summary on WhatsApp</span>
+                        <span class="lang-ar-text">مشاركة ملف PDF عبر واتساب</span>
+                        <span class="lang-en-text">Share PDF via WhatsApp</span>
                     </button>
 
                     <!-- PDF Download Button -->
-                    <button type="button" class="btn-download-pdf" onclick="printOrSavePDF()">
+                    <button type="button" class="btn-download-pdf" onclick="downloadPDF()">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span class="lang-ar-text">تنزيل التقرير كـ PDF فائق الدقة</span>
+                        <span class="lang-ar-text">تنزيل التقرير PDF عالي الدقة</span>
                         <span class="lang-en-text">Download High-Quality PDF</span>
                     </button>
 
@@ -1059,94 +1185,275 @@
         </form>
     </div>
 
+    <div class="export-status" id="exportStatus" aria-live="polite" aria-hidden="true">
+        <div class="export-status-card">
+            <div class="loader"></div>
+            <span id="exportStatusText">جاري تجهيز ملف PDF عالي الدقة...</span>
+        </div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        // Auto set current date & time
+        const branches = [
+            { id: 'sweifieh-1', ar: 'صويفية (1)', en: 'Sweifieh (1)' },
+            { id: 'sweifieh-2', ar: 'صويفية (2)', en: 'Sweifieh (2)' },
+            { id: 'abdali', ar: 'العبدلي', en: 'Abdali' },
+            { id: 'abdoun', ar: 'عبدون', en: 'Abdoun' },
+            { id: 'rabieh', ar: 'الرابية', en: 'Al Rabieh' },
+            { id: 'jubeiha', ar: 'الجبيهة', en: 'Al Jubeiha' },
+            { id: 'tabarbour', ar: 'طبربور', en: 'Tabarbour' },
+            { id: 'muqabalain', ar: 'المقابلين', en: 'Al Muqabalain' },
+            { id: 'khalda', ar: 'خلدا', en: 'Khalda' },
+            { id: 'irbid', ar: 'اربد', en: 'Irbid' },
+            { id: 'zarqa', ar: 'الزرقاء', en: 'Zarqa' },
+            { id: 'salt', ar: 'السلط', en: 'Al Salt' },
+            { id: 'madaba', ar: 'مادبا', en: 'Madaba' },
+            { id: 'karak', ar: 'الكرك', en: 'Karak' },
+            { id: 'aqaba', ar: 'العقبة', en: 'Aqaba' }
+        ];
+
+        const scoreMap = {
+            'ممتاز (Excellent)': 1,
+            'جيد (Good)': 0.75,
+            'يحتاج تحسين (Needs Improvement)': 0.5,
+            'ضعيف (Poor)': 0.25
+        };
+
+        let currentLanguage = 'ar';
+        let toastTimer;
+
         window.addEventListener('DOMContentLoaded', () => {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('visit_date').value = now.toISOString().slice(0,16);
+            setCurrentDate();
+            populateBranches();
+            document.querySelectorAll('.rating-grid input').forEach(input => {
+                input.addEventListener('change', calculateScore);
+            });
+            document.getElementById('evaluationForm').addEventListener('reset', () => {
+                setTimeout(() => {
+                    calculateScore();
+                    setCurrentDate();
+                }, 0);
+            });
         });
 
+        function setCurrentDate() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('visit_date').value = now.toISOString().slice(0, 16);
+        }
+
+        function populateBranches() {
+            const select = document.getElementById('branch_name');
+            const selected = select.value;
+            const placeholder = currentLanguage === 'ar' ? '-- اختر الفرع من القائمة --' : '-- Select a branch --';
+            select.innerHTML = `<option value="" disabled>${placeholder}</option>` + branches
+                .map(branch => `<option value="${branch.id}">${branch[currentLanguage]}</option>`)
+                .join('');
+            select.value = selected || '';
+        }
+
         function setLanguage(lang) {
+            currentLanguage = lang;
             const btns = document.querySelectorAll('.lang-btn');
-            if (lang === 'en') {
-                document.body.classList.add('lang-en');
-                document.documentElement.setAttribute('dir', 'ltr');
-                document.documentElement.setAttribute('lang', 'en');
-                btns[0].classList.remove('active');
-                btns[1].classList.add('active');
-            } else {
-                document.body.classList.remove('lang-en');
-                document.documentElement.setAttribute('dir', 'rtl');
-                document.documentElement.setAttribute('lang', 'ar');
-                btns[1].classList.remove('active');
-                btns[0].classList.add('active');
+            const isEnglish = lang === 'en';
+            document.body.classList.toggle('lang-en', isEnglish);
+            document.documentElement.setAttribute('dir', isEnglish ? 'ltr' : 'rtl');
+            document.documentElement.setAttribute('lang', lang);
+            btns[0].classList.toggle('active', !isEnglish);
+            btns[1].classList.toggle('active', isEnglish);
+            populateBranches();
+            updatePlaceholders();
+        }
+
+        function updatePlaceholders() {
+            const isEnglish = currentLanguage === 'en';
+            document.getElementById('staff_name').placeholder = isEnglish ? 'Employee name or role...' : 'اسم الموظف أو صفته...';
+            document.getElementById('strengths').placeholder = isEnglish ? 'Key strengths observed...' : 'أبرز الإيجابيات وطريقة التعامل المميزة...';
+            document.getElementById('improvements').placeholder = isEnglish ? 'Points that require development or training...' : 'النقاط التي تحتاج لتطوير أو تدريب...';
+            document.getElementById('comments').placeholder = isEnglish ? 'Any other details related to the visit...' : 'أي تفاصيل أو وقائع أخرى تخص الزيارة...';
+            document.getElementById('branch_name').setAttribute('aria-label', isEnglish ? 'Select branch' : 'اختر الفرع');
+        }
+
+        function calculateScore() {
+            let total = 0;
+            let answered = 0;
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    total += scoreMap[selected.value] || 0;
+                    answered++;
+                }
+            }
+            document.getElementById('overall_score').value = answered ? total.toFixed(2).replace(/\.00$/, '') : '';
+        }
+
+        function showToast(arText, enText = arText) {
+            const toast = document.getElementById('toast');
+            toast.textContent = currentLanguage === 'en' ? enText : arText;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+        }
+
+        function setExportStatus(show, mode = 'download') {
+            const overlay = document.getElementById('exportStatus');
+            const message = document.getElementById('exportStatusText');
+            const messages = {
+                download: {
+                    ar: 'جاري تجهيز ملف PDF عالي الدقة...',
+                    en: 'Preparing your high-quality PDF...'
+                },
+                share: {
+                    ar: 'جاري تجهيز ملف PDF للمشاركة...',
+                    en: 'Preparing the PDF for sharing...'
+                }
+            };
+            message.textContent = messages[mode][currentLanguage];
+            overlay.classList.toggle('show', show);
+            overlay.setAttribute('aria-hidden', String(!show));
+        }
+
+        function validateEvaluation() {
+            const form = document.getElementById('evaluationForm');
+            if (!form.reportValidity()) return false;
+
+            for (let i = 1; i <= 10; i++) {
+                if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                    const card = document.querySelector(`input[name="q${i}"]`).closest('.question-card');
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    showToast(
+                        `يرجى تقييم النقطة رقم ${i} قبل إنشاء التقرير.`,
+                        `Please rate item ${i} before creating the report.`
+                    );
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function getBranchName() {
+            const selected = branches.find(branch => branch.id === document.getElementById('branch_name').value);
+            return selected ? selected[currentLanguage] : (currentLanguage === 'en' ? 'Branch' : 'الفرع');
+        }
+
+        function getFileName() {
+            const branch = getBranchName().replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_|_$/g, '');
+            const date = new Date().toISOString().slice(0, 10);
+            return `First_Nutrition_Evaluation_${branch}_${date}.pdf`;
+        }
+
+        async function createPdfBlob(mode) {
+            if (!validateEvaluation()) return null;
+            if (typeof html2pdf === 'undefined') {
+                showToast('تعذّر تحميل أداة PDF. تأكد من اتصال الإنترنت وحاول مرة أخرى.', 'The PDF tool could not load. Check your internet connection and try again.');
+                return null;
+            }
+
+            setExportStatus(true, mode);
+            const report = document.getElementById('reportArea');
+            const textareas = Array.from(report.querySelectorAll('textarea'));
+            const originalHeights = textareas.map(textarea => textarea.style.height);
+            const originalScroll = window.scrollY;
+
+            try {
+                await document.fonts.ready;
+                document.body.classList.add('pdf-export-mode');
+                textareas.forEach(textarea => {
+                    textarea.style.height = `${Math.max(58, textarea.scrollHeight)}px`;
+                });
+                window.scrollTo(0, 0);
+                await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+                const scale = Math.min(3, Math.max(2.25, window.devicePixelRatio || 2));
+                const options = {
+                    margin: 0,
+                    filename: getFileName(),
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                        letterRendering: true,
+                        scrollX: 0,
+                        scrollY: 0,
+                        windowWidth: 794
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+                    pagebreak: {
+                        mode: ['css', 'legacy'],
+                        avoid: ['.header-card', '.meta-card', '.question-card', '.textarea-box']
+                    }
+                };
+
+                return await html2pdf().set(options).from(report).toPdf().outputPdf('blob');
+            } catch (error) {
+                console.error(error);
+                showToast('حدث خطأ أثناء إنشاء الملف. حاول مرة أخرى.', 'Something went wrong while creating the file. Please try again.');
+                return null;
+            } finally {
+                textareas.forEach((textarea, index) => textarea.style.height = originalHeights[index]);
+                document.body.classList.remove('pdf-export-mode');
+                window.scrollTo(0, originalScroll);
+                setExportStatus(false, mode);
             }
         }
 
-        // Native Browser Vector PDF export
-        function printOrSavePDF() {
-            const branchSelect = document.getElementById('branch_name');
-            const branch = branchSelect.options[branchSelect.selectedIndex]?.text.split('/')[0].trim() || 'Store';
-            const date = new Date().toISOString().slice(0, 10);
-            const originalTitle = document.title;
-            
-            document.title = `Evaluation_${branch}_${date}`;
-            window.print();
-            
-            setTimeout(() => {
-                document.title = originalTitle;
-            }, 1500);
+        function saveBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1500);
         }
 
-        // WhatsApp Share Generator
-        function shareViaWhatsApp() {
-            const branchSelect = document.getElementById('branch_name');
-            const branch = branchSelect.options[branchSelect.selectedIndex]?.text || 'غير محدد';
-            const staff = document.getElementById('staff_name').value.trim() || 'غير محدد';
-            const visitDate = document.getElementById('visit_date').value || 'غير محدد';
-            const score = document.getElementById('overall_score').value || '__';
-            const strengths = document.getElementById('strengths').value.trim() || 'لا يوجد';
-            const improvements = document.getElementById('improvements').value.trim() || 'لا يوجد';
-            const comments = document.getElementById('comments').value.trim() || 'لا يوجد';
+        async function downloadPDF() {
+            const blob = await createPdfBlob('download');
+            if (!blob) return;
+            saveBlob(blob, getFileName());
+            showToast('تم تنزيل ملف PDF بنجاح.', 'PDF downloaded successfully.');
+        }
 
-            // Check selected answers for quick metrics
-            const getVal = (name) => {
-                const el = document.querySelector(`input[name="${name}"]:checked`);
-                return el ? el.value.split('(')[0].trim() : 'لم يُحدد';
-            };
+        async function sharePDF() {
+            const blob = await createPdfBlob('share');
+            if (!blob) return;
 
-            const text = 
-`📋 *تقرير تقييم زيارة فرع (Mystery Shopper)*
-🏢 *الفرع:* ${branch}
-👤 *الموظف:* ${staff}
-📅 *التاريخ والوقت:* ${visitDate}
+            const filename = getFileName();
+            const file = new File([blob], filename, { type: 'application/pdf' });
+            const staff = document.getElementById('staff_name').value.trim();
+            const score = document.getElementById('overall_score').value;
+            const shareText = currentLanguage === 'en'
+                ? `First Nutrition visit evaluation – ${getBranchName()}${staff ? ` – ${staff}` : ''} – Score: ${score}/10`
+                : `تقييم زيارة فرع فيرست نيوترشن – ${getBranchName()}${staff ? ` – ${staff}` : ''} – النتيجة: ${score}/10`;
 
-⭐ *الدرجة الإجمالية:* ${score} / 10
-
-📌 *ملخص التقييم السريع:*
-1. التعامل مع الزبون: ${getVal('q1')}
-2. المعرفة بالمنتجات: ${getVal('q2')}
-3. الأسعار والعروض: ${getVal('q3')}
-4. الأسئلة والاحتياج: ${getVal('q4')}
-5. فهم الاحتياج: ${getVal('q5')}
-6. تقديم المنتج: ${getVal('q6')}
-7. اقتراح البدائل: ${getVal('q7')}
-8. الرد على الاستفسارات: ${getVal('q8')}
-9. معالجة الاعتراضات: ${getVal('q9')}
-10. مهارة البيع والإغلاق: ${getVal('q10')}
-
-💪 *نقاط القوة:*
-${strengths}
-
-⚠️ *مجالات التحسين:*
-${improvements}
-
-📝 *ملاحظات إضافية:*
-${comments}`;
-
-            const url = "https://wa.me/?text=" + encodeURIComponent(text);
-            window.open(url, '_blank');
+            try {
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: currentLanguage === 'en' ? 'First Nutrition Visit Evaluation' : 'تقييم زيارة فرع فيرست نيوترشن',
+                        text: shareText
+                    });
+                    showToast('تم فتح خيارات المشاركة؛ اختر واتساب.', 'Sharing options opened; choose WhatsApp.');
+                } else {
+                    saveBlob(blob, filename);
+                    showToast(
+                        'تم تنزيل ملف PDF. افتح واتساب وأرفق الملف من التنزيلات.',
+                        'The PDF was downloaded. Open WhatsApp and attach it from Downloads.'
+                    );
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error(error);
+                    saveBlob(blob, filename);
+                    showToast(
+                        'تعذرت المشاركة المباشرة؛ تم تنزيل الملف لإرساله يدوياً عبر واتساب.',
+                        'Direct sharing was unavailable; the file was downloaded for manual WhatsApp sharing.'
+                    );
+                }
+            }
         }
     </script>
 </body>
