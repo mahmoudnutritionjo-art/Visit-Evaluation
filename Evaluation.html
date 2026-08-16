@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج تقييم زيارة فرع - Store Visit Evaluation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #111827;
+            --primary-accent: #f59e0b;
+            --accent-hover: #d97706;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 16px 60px;
+            line-height: 1.6;
+        }
+
+        body.lang-en {
+            font-family: 'Inter', sans-serif;
+            direction: ltr;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar / Lang Switcher */
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .lang-switch {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 4px;
+            border-radius: 30px;
+            display: inline-flex;
+            box-shadow: var(--shadow);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 20px;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        /* Header Card */
+        .header-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border-top: 5px solid var(--primary-accent);
+            margin-bottom: 24px;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-height: 75px;
+            max-width: 220px;
+            object-fit: contain;
+        }
+
+        .header-card h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .header-card p.subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Meta Information Form */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .meta-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .meta-field input, .meta-field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: border-color 0.2s;
+        }
+
+        .meta-field input:focus, .meta-field select:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            background: #fff;
+        }
+
+        /* Questions Section */
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: var(--primary-accent);
+            border-radius: 2px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .question-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .q-num {
+            background: #f1f5f9;
+            color: var(--primary);
+            font-weight: 800;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .q-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .q-content p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Rating Options */
+        .rating-options {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .rating-label {
+            flex: 1;
+            min-width: 110px;
+            cursor: pointer;
+        }
+
+        .rating-label input {
+            display: none;
+        }
+
+        .rating-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #fafafa;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .rating-label input:checked + .rating-box {
+            background: #fffbeb;
+            color: #92400e;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+            font-weight: 700;
+        }
+
+        /* Overall Evaluation & Textareas */
+        .overall-section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .score-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .score-box span {
+            font-weight: 700;
+            color: #92400e;
+            font-size: 16px;
+        }
+
+        .score-box input {
+            width: 80px;
+            padding: 8px 12px;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            border: 2px solid var(--primary-accent);
+            border-radius: 8px;
+            outline: none;
+            background: #fff;
+        }
+
+        .textarea-group {
+            margin-bottom: 18px;
+        }
+
+        .textarea-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .textarea-group textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            resize: vertical;
+        }
+
+        .textarea-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            background: #fff;
+        }
+
+        /* Submit Button */
+        .submit-container {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 14px 40px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.2);
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+        /* Visibility for Lang Switch */
+        .lang-en-text { display: none; }
+        .lang-ar-text { display: inline; }
+        
+        body.lang-en .lang-en-text { display: inline; }
+        body.lang-en .lang-ar-text { display: none; }
+
+        @media (max-width: 600px) {
+            .rating-options {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .header-card {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Language Switcher -->
+        <div class="top-nav">
+            <div class="lang-switch">
+                <button type="button" class="lang-btn active" onclick="setLanguage('ar')">العربية</button>
+                <button type="button" class="lang-btn" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header-card">
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/mahmoudnutritionjo-art/Visit-Evaluation/main/logo2.png" alt="Company Logo" onerror="this.src='https://github.com/mahmoudnutritionjo-art/Visit-Evaluation/raw/main/logo2.png'">
+            </div>
+            <h1>
+                <span class="lang-ar-text">نموذج تقييم زيارة محل مكملات غذائية</span>
+                <span class="lang-en-text">Store Visit Evaluation – Sports Supplements</span>
+            </h1>
+            <p class="subtitle">
+                <span class="lang-ar-text">الهدف من الزيارة: تقييم مستوى خدمة العملاء، المعرفة بالمنتجات والأسعار، مهارات البيع، وطريقة تعامل الموظف مع مختلف مواقف العملاء.</span>
+                <span class="lang-en-text">Purpose of the Visit: To evaluate customer service, product & price knowledge, selling skills, and the employee’s ability to handle different customer situations.</span>
+            </p>
+        </div>
+
+        <!-- Meta Information -->
+        <form id="evaluationForm" onsubmit="event.preventDefault(); alert('تم حفظ التقييم بنجاح!');">
+            <div class="meta-grid">
+                <div class="meta-field">
+                    <label>
+                        <span class="lang-ar-text">اسم الفرع / المتجر:</span>
+                        <span class="lang-en-text">Store / Branch Name:</span>
+                    </label>
+                    <input type="text" required placeholder="Branch Name...">
+                </div>
+                <div class="meta-field">
+                    <label>
+                        <span class="lang-ar-text">اسم الموظف (إن وجد):</span>
+                        <span class="lang-en-text">Staff Member Name:</span>
+                    </label>
+                    <input type="text" placeholder="Staff Name...">
+                </div>
+                <div class="meta-field">
+                    <label>
+                        <span class="lang-ar-text">تاريخ ووقت الزيارة:</span>
+                        <span class="lang-en-text">Date & Time of Visit:</span>
+                    </label>
+                    <input type="datetime-local" required>
+                </div>
+            </div>
+
+            <!-- Evaluation Criteria -->
+            <div class="section-title">
+                <span class="lang-ar-text">أولاً: معايير التقييم التفصيلية (10 نقاط)</span>
+                <span class="lang-en-text">Part 1: Detailed Evaluation Points (10 Criteria)</span>
+            </div>
+
+            <!-- Q1 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">1</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">طريقة التعامل مع الزبون</span>
+                            <span class="lang-en-text">Customer Handling</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل الموظف يستقبل الزبون بطريقة مهنية ولطيفة؟ وهل يبادر بالتواصل معه دون إزعاج أو ضغط؟</span>
+                            <span class="lang-en-text">Does the employee welcome the customer in a professional and friendly manner? Does he approach the customer without being pushy?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q1" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">2</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">المعلومات عن المنتج</span>
+                            <span class="lang-en-text">Product Knowledge</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل الموظف لديه معرفة كافية بالمنتج؟ وهل يستطيع شرح المكونات، الفوائد، الاستخدام وطريقة تناوله بشكل واضح؟</span>
+                            <span class="lang-en-text">Does the employee have sufficient knowledge about the product? Can he clearly explain its ingredients, benefits, usage, and recommended serving?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q2" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">3</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">المعلومات عن الأسعار والعروض</span>
+                            <span class="lang-en-text">Price & Promotion Knowledge</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل الموظف يعرف أسعار المنتجات والعروض الحالية بشكل دقيق؟ وهل يشرحها للزبون بوضوح؟</span>
+                            <span class="lang-en-text">Does the employee know the current product prices and promotions accurately? Does he explain them clearly to the customer?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q3" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">4</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">الأسئلة التي يطرحها الموظف على الزبون</span>
+                            <span class="lang-en-text">Questions Asked to the Customer</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل يسأل عن هدف الزبون، مثل زيادة الكتلة العضلية، خسارة الوزن، الطاقة أو تحسين الأداء، قبل اقتراح المنتج؟</span>
+                            <span class="lang-en-text">Does the employee ask about the customer’s goal, such as muscle gain, weight loss, energy, or performance, before recommending a product?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q4" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">5</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">فهم احتياج الزبون</span>
+                            <span class="lang-en-text">Understanding Customer Needs</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل يستطيع الموظف تحديد احتياج الزبون بناءً على المعلومات التي يحصل عليها من خلال الحوار؟</span>
+                            <span class="lang-en-text">Can the employee identify the customer’s needs based on the information gathered during the conversation?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q5" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">6</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">طريقة تقديم المنتج</span>
+                            <span class="lang-en-text">Product Presentation</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل يشرح الموظف المنتج بطريقة بسيطة ومقنعة، ويربط مواصفات المنتج باحتياج الزبون؟</span>
+                            <span class="lang-en-text">Does the employee explain the product in a simple and convincing way and connect its features to the customer’s needs?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q6" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">7</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">اقتراح البدائل والمنتجات المناسبة</span>
+                            <span class="lang-en-text">Offering Alternatives & Suitable Products</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">إذا كان المنتج غير متوفر أو غير مناسب، هل يقترح الموظف بديلاً مناسباً بدلاً من إنهاء عملية البيع؟</span>
+                            <span class="lang-en-text">If a product is unavailable or unsuitable, does the employee recommend an appropriate alternative instead of ending the sale?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q7" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">8</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">التعامل مع أسئلة الزبون</span>
+                            <span class="lang-en-text">Handling Customer Questions</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل يستمع الموظف جيداً إلى أسئلة الزبون؟ وهل يعطي إجابات واضحة ودقيقة دون إعطاء معلومات غير مؤكدة؟</span>
+                            <span class="lang-en-text">Does the employee listen carefully to the customer’s questions? Does he provide clear and accurate answers without giving unconfirmed information?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q8" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">9</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">التعامل مع رد فعل أو اعتراض غير صحيح من الزبون</span>
+                            <span class="lang-en-text">Handling Customer Objections & Misconceptions</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">عند إعطاء الزبون معلومة غير صحيحة أو اعتراض، هل يصحح الموظف المعلومة بهدوء واحترام، دون جدال أو إحراج؟</span>
+                            <span class="lang-en-text">If the customer provides incorrect information or raises an objection, does the employee correct it calmly and respectfully without arguing?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q9" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="question-card">
+                <div class="q-header">
+                    <div class="q-num">10</div>
+                    <div class="q-content">
+                        <h3>
+                            <span class="lang-ar-text">أسلوب البيع وإغلاق عملية البيع</span>
+                            <span class="lang-en-text">Selling Approach & Closing the Sale</span>
+                        </h3>
+                        <p>
+                            <span class="lang-ar-text">هل يحاول إتمام عملية البيع بطريقة مهنية ويقدم توصية واضحة دون ضغط أو مبالغة؟</span>
+                            <span class="lang-en-text">Does the employee try to close the sale professionally with clear recommendations and without undue pressure?</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-label"><input type="radio" name="q10" value="excellent"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="good"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="needs_improvement"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="poor"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                </div>
+            </div>
+
+            <!-- Overall Evaluation -->
+            <div class="overall-section">
+                <div class="section-title">
+                    <span class="lang-ar-text">ثانياً: التقييم العام والملاحظات</span>
+                    <span class="lang-en-text">Part 2: Overall Evaluation & Comments</span>
+                </div>
+
+                <div class="score-box">
+                    <span>
+                        <span class="lang-ar-text">الدرجة الإجمالية المستحقة:</span>
+                        <span class="lang-en-text">Overall Calculated Score:</span>
+                    </span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <input type="number" min="0" max="10" step="0.5" placeholder="10">
+                        <span style="font-size:18px; font-weight:800; color:var(--text-muted);">/ 10</span>
+                    </div>
+                </div>
+
+                <div class="textarea-group">
+                    <label>
+                        <span class="lang-ar-text">نقاط القوة الملحوظة:</span>
+                        <span class="lang-en-text">Strengths Observed:</span>
+                    </label>
+                    <textarea placeholder="أبرز الإيجابيات وطريقة التعامل المميزة..."></textarea>
+                </div>
+
+                <div class="textarea-group">
+                    <label>
+                        <span class="lang-ar-text">مجالات التحسين المطلوبة:</span>
+                        <span class="lang-en-text">Areas for Improvement:</span>
+                    </label>
+                    <textarea placeholder="النقاط التي تحتاج لتطوير أو تدريب..."></textarea>
+                </div>
+
+                <div class="textarea-group">
+                    <label>
+                        <span class="lang-ar-text">ملاحظات وتوصيات إضافية:</span>
+                        <span class="lang-en-text">Additional Comments & Recommendations:</span>
+                    </label>
+                    <textarea placeholder="أي تفاصيل أخرى تخص الزيارة أو الفرع..."></textarea>
+                </div>
+
+                <div class="submit-container">
+                    <button type="submit" class="btn-submit">
+                        <span class="lang-ar-text">إرسال وحفظ التقييم</span>
+                        <span class="lang-en-text">Submit Evaluation</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            const btns = document.querySelectorAll('.lang-btn');
+            if (lang === 'en') {
+                document.body.classList.add('lang-en');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+                btns[0].classList.remove('active');
+                btns[1].classList.add('active');
+            } else {
+                document.body.classList.remove('lang-en');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+                btns[1].classList.remove('active');
+                btns[0].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
