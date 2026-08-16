@@ -329,7 +329,7 @@
             background: #fff;
         }
 
-        /* Submit Buttons */
+        /* Action Buttons Area */
         .submit-container {
             margin-top: 28px;
             display: flex;
@@ -341,42 +341,41 @@
         .btn-pdf {
             background: #dc2626;
             color: #fff;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            padding: 14px 28px;
+            padding: 14px 36px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
             font-family: inherit;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-pdf:hover {
             background: #b91c1c;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(220, 38, 38, 0.4);
         }
 
-        .btn-submit {
-            background: var(--primary);
-            color: #fff;
+        .btn-reset {
+            background: #f1f5f9;
+            color: #475569;
             font-size: 15px;
             font-weight: 700;
             padding: 14px 28px;
             border-radius: 30px;
-            border: none;
+            border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.2);
             font-family: inherit;
         }
 
-        .btn-submit:hover {
-            background: #000;
-            transform: translateY(-1px);
+        .btn-reset:hover {
+            background: #e2e8f0;
         }
 
         /* Visibility for Lang Switch */
@@ -397,7 +396,7 @@
             .submit-container {
                 flex-direction: column;
             }
-            .btn-pdf, .btn-submit {
+            .btn-pdf, .btn-reset {
                 width: 100%;
                 justify-content: center;
             }
@@ -407,7 +406,7 @@
 <body>
 
     <div class="container" id="reportArea">
-        <!-- Language Switcher (excluded from PDF via JS) -->
+        <!-- Language Switcher -->
         <div class="top-nav" data-html2canvas-ignore="true">
             <div class="lang-switch">
                 <button type="button" class="lang-btn active" onclick="setLanguage('ar')">العربية</button>
@@ -430,29 +429,29 @@
             </p>
         </div>
 
-        <!-- Form Area -->
-        <form id="evaluationForm" action="https://formspree.io/f/xqpzdvpl" method="POST">
+        <!-- Form Area (Self-contained, No Formspree) -->
+        <form id="evaluationForm" onsubmit="event.preventDefault(); generatePDF();">
             <div class="meta-grid">
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">اسم الفرع / المتجر:</span>
                         <span class="lang-en-text">Store / Branch Name:</span>
                     </label>
-                    <input type="text" id="branch_name" name="Branch_Name" required placeholder="Branch Name...">
+                    <input type="text" id="branch_name" required placeholder="Branch Name...">
                 </div>
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">اسم الموظف (إن وجد):</span>
                         <span class="lang-en-text">Staff Member Name:</span>
                     </label>
-                    <input type="text" id="staff_name" name="Staff_Name" placeholder="Staff Name...">
+                    <input type="text" id="staff_name" placeholder="Staff Name...">
                 </div>
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">تاريخ ووقت الزيارة:</span>
                         <span class="lang-en-text">Date & Time of Visit:</span>
                     </label>
-                    <input type="datetime-local" id="visit_date" name="Visit_DateTime" required>
+                    <input type="datetime-local" id="visit_date" required>
                 </div>
             </div>
 
@@ -478,10 +477,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q1" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -501,10 +500,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q2" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -524,10 +523,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q3" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -547,10 +546,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q4" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -570,10 +569,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q5" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -593,10 +592,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q6" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -616,10 +615,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q7" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -639,10 +638,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q8" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -662,10 +661,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q9" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -685,10 +684,10 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
-                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
-                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
-                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
+                    <label class="rating-label"><input type="radio" name="q10" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
                 </div>
             </div>
 
@@ -705,7 +704,7 @@
                         <span class="lang-en-text">Overall Calculated Score:</span>
                     </span>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <input type="number" id="overall_score" name="Overall_Score_out_of_10" min="0" max="10" step="0.5" placeholder="10">
+                        <input type="number" id="overall_score" min="0" max="10" step="0.5" placeholder="10">
                         <span style="font-size:18px; font-weight:800; color:var(--text-muted);">/ 10</span>
                     </div>
                 </div>
@@ -715,7 +714,7 @@
                         <span class="lang-ar-text">نقاط القوة الملحوظة:</span>
                         <span class="lang-en-text">Strengths Observed:</span>
                     </label>
-                    <textarea id="strengths" name="Strengths_Observed" placeholder="أبرز الإيجابيات وطريقة التعامل المميزة..."></textarea>
+                    <textarea id="strengths" placeholder="أبرز الإيجابيات وطريقة التعامل المميزة..."></textarea>
                 </div>
 
                 <div class="textarea-group">
@@ -723,7 +722,7 @@
                         <span class="lang-ar-text">مجالات التحسين المطلوبة:</span>
                         <span class="lang-en-text">Areas for Improvement:</span>
                     </label>
-                    <textarea id="improvements" name="Areas_for_Improvement" placeholder="النقاط التي تحتاج لتطوير أو تدريب..."></textarea>
+                    <textarea id="improvements" placeholder="النقاط التي تحتاج لتطوير أو تدريب..."></textarea>
                 </div>
 
                 <div class="textarea-group">
@@ -731,19 +730,19 @@
                         <span class="lang-ar-text">ملاحظات وتوصيات إضافية:</span>
                         <span class="lang-en-text">Additional Comments & Recommendations:</span>
                     </label>
-                    <textarea id="comments" name="Additional_Comments" placeholder="أي تفاصيل أخرى تخص الزيارة أو الفرع..."></textarea>
+                    <textarea id="comments" placeholder="أي تفاصيل أخرى تخص الزيارة أو الفرع..."></textarea>
                 </div>
 
-                <!-- Buttons Area -->
+                <!-- Action Buttons Area -->
                 <div class="submit-container" data-html2canvas-ignore="true">
                     <button type="button" class="btn-pdf" onclick="generatePDF()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span class="lang-ar-text">تحميل التقرير كـ PDF فوراً</span>
-                        <span class="lang-en-text">Download as PDF</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span class="lang-ar-text">حفظ وتحميل التقرير PDF</span>
+                        <span class="lang-en-text">Download PDF Report</span>
                     </button>
-                    <button type="submit" class="btn-submit">
-                        <span class="lang-ar-text">إرسال التقييم أونلاين</span>
-                        <span class="lang-en-text">Submit Online</span>
+                    <button type="reset" class="btn-reset">
+                        <span class="lang-ar-text">إعادة تعيين النموذج</span>
+                        <span class="lang-en-text">Reset Form</span>
                     </button>
                 </div>
             </div>
@@ -772,7 +771,7 @@
             const element = document.getElementById('reportArea');
             const branch = document.getElementById('branch_name').value.trim() || 'Branch';
             const date = new Date().toISOString().slice(0, 10);
-            const filename = `Evaluation-Report_${branch}_${date}.pdf`;
+            const filename = `Evaluation_${branch}_${date}.pdf`;
 
             const opt = {
                 margin:       [10, 10, 10, 10],
@@ -783,7 +782,6 @@
                 pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            // Generate and download PDF directly in user browser
             html2pdf().set(opt).from(element).save();
         }
     </script>
