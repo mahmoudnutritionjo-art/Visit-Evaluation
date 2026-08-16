@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نموذج تقييم زيارة فرع - Store Visit Evaluation</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- html2pdf Library for Instant PDF Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary: #111827;
@@ -180,11 +182,7 @@
             margin-bottom: 16px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .question-card:hover {
-            box-shadow: var(--shadow-lg);
+            page-break-inside: avoid;
         }
 
         .q-header {
@@ -269,6 +267,7 @@
             margin-top: 28px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-lg);
+            page-break-inside: avoid;
         }
 
         .score-box {
@@ -330,18 +329,43 @@
             background: #fff;
         }
 
-        /* Submit Button */
+        /* Submit Buttons */
         .submit-container {
-            margin-top: 24px;
-            text-align: center;
+            margin-top: 28px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-pdf {
+            background: #dc2626;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pdf:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
         }
 
         .btn-submit {
             background: var(--primary);
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            padding: 14px 40px;
+            padding: 14px 28px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
@@ -370,14 +394,21 @@
             .header-card {
                 padding: 24px 16px;
             }
+            .submit-container {
+                flex-direction: column;
+            }
+            .btn-pdf, .btn-submit {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Language Switcher -->
-        <div class="top-nav">
+    <div class="container" id="reportArea">
+        <!-- Language Switcher (excluded from PDF via JS) -->
+        <div class="top-nav" data-html2canvas-ignore="true">
             <div class="lang-switch">
                 <button type="button" class="lang-btn active" onclick="setLanguage('ar')">العربية</button>
                 <button type="button" class="lang-btn" onclick="setLanguage('en')">English</button>
@@ -387,7 +418,7 @@
         <!-- Header -->
         <div class="header-card">
             <div class="logo-container">
-                <img src="https://raw.githubusercontent.com/mahmoudnutritionjo-art/Visit-Evaluation/main/logo2.png" alt="Company Logo" onerror="this.src='https://github.com/mahmoudnutritionjo-art/Visit-Evaluation/raw/main/logo2.png'">
+                <img src="https://raw.githubusercontent.com/mahmoudnutritionjo-art/Visit-Evaluation/main/logo2.png" alt="Company Logo" crossorigin="anonymous">
             </div>
             <h1>
                 <span class="lang-ar-text">نموذج تقييم زيارة محل مكملات غذائية</span>
@@ -399,34 +430,29 @@
             </p>
         </div>
 
-        <!-- Evaluation Form with FormSubmit action -->
-<form action="https://formspree.io/f/xqpzdvpl" method="POST">
-    <!-- FormSubmit Configurations -->
-            <input type="hidden" name="_subject" value="تقرير تقييم زيارة فرع جديد | First Nutrition Visit Evaluation">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-
+        <!-- Form Area -->
+        <form id="evaluationForm" action="https://formspree.io/f/xqpzdvpl" method="POST">
             <div class="meta-grid">
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">اسم الفرع / المتجر:</span>
                         <span class="lang-en-text">Store / Branch Name:</span>
                     </label>
-                    <input type="text" name="Branch_Name" required placeholder="Branch Name...">
+                    <input type="text" id="branch_name" name="Branch_Name" required placeholder="Branch Name...">
                 </div>
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">اسم الموظف (إن وجد):</span>
                         <span class="lang-en-text">Staff Member Name:</span>
                     </label>
-                    <input type="text" name="Staff_Name" placeholder="Staff Name...">
+                    <input type="text" id="staff_name" name="Staff_Name" placeholder="Staff Name...">
                 </div>
                 <div class="meta-field">
                     <label>
                         <span class="lang-ar-text">تاريخ ووقت الزيارة:</span>
                         <span class="lang-en-text">Date & Time of Visit:</span>
                     </label>
-                    <input type="datetime-local" name="Visit_DateTime" required>
+                    <input type="datetime-local" id="visit_date" name="Visit_DateTime" required>
                 </div>
             </div>
 
@@ -452,7 +478,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="01_Customer_Handling" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -475,7 +501,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="02_Product_Knowledge" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -498,7 +524,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="03_Price_and_Promotion" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -521,7 +547,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="04_Questions_Asked" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -544,7 +570,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="05_Understanding_Needs" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -567,7 +593,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="06_Product_Presentation" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -590,7 +616,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="07_Offering_Alternatives" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -613,7 +639,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="08_Handling_Questions" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -636,7 +662,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="09_Handling_Objections" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -659,7 +685,7 @@
                     </div>
                 </div>
                 <div class="rating-options">
-                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="ممتاز (Excellent)" required><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
+                    <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="ممتاز (Excellent)"><div class="rating-box"><span class="lang-ar-text">ممتاز</span><span class="lang-en-text">Excellent</span></div></label>
                     <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="جيد (Good)"><div class="rating-box"><span class="lang-ar-text">جيد</span><span class="lang-en-text">Good</span></div></label>
                     <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="يحتاج تحسين (Needs Improvement)"><div class="rating-box"><span class="lang-ar-text">يحتاج تحسين</span><span class="lang-en-text">Needs Improvement</span></div></label>
                     <label class="rating-label"><input type="radio" name="10_Closing_The_Sale" value="ضعيف (Poor)"><div class="rating-box"><span class="lang-ar-text">ضعيف</span><span class="lang-en-text">Poor</span></div></label>
@@ -679,7 +705,7 @@
                         <span class="lang-en-text">Overall Calculated Score:</span>
                     </span>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <input type="number" name="Overall_Score_out_of_10" min="0" max="10" step="0.5" placeholder="10" required>
+                        <input type="number" id="overall_score" name="Overall_Score_out_of_10" min="0" max="10" step="0.5" placeholder="10">
                         <span style="font-size:18px; font-weight:800; color:var(--text-muted);">/ 10</span>
                     </div>
                 </div>
@@ -689,7 +715,7 @@
                         <span class="lang-ar-text">نقاط القوة الملحوظة:</span>
                         <span class="lang-en-text">Strengths Observed:</span>
                     </label>
-                    <textarea name="Strengths_Observed" placeholder="أبرز الإيجابيات وطريقة التعامل المميزة..."></textarea>
+                    <textarea id="strengths" name="Strengths_Observed" placeholder="أبرز الإيجابيات وطريقة التعامل المميزة..."></textarea>
                 </div>
 
                 <div class="textarea-group">
@@ -697,7 +723,7 @@
                         <span class="lang-ar-text">مجالات التحسين المطلوبة:</span>
                         <span class="lang-en-text">Areas for Improvement:</span>
                     </label>
-                    <textarea name="Areas_for_Improvement" placeholder="النقاط التي تحتاج لتطوير أو تدريب..."></textarea>
+                    <textarea id="improvements" name="Areas_for_Improvement" placeholder="النقاط التي تحتاج لتطوير أو تدريب..."></textarea>
                 </div>
 
                 <div class="textarea-group">
@@ -705,13 +731,19 @@
                         <span class="lang-ar-text">ملاحظات وتوصيات إضافية:</span>
                         <span class="lang-en-text">Additional Comments & Recommendations:</span>
                     </label>
-                    <textarea name="Additional_Comments" placeholder="أي تفاصيل أخرى تخص الزيارة أو الفرع..."></textarea>
+                    <textarea id="comments" name="Additional_Comments" placeholder="أي تفاصيل أخرى تخص الزيارة أو الفرع..."></textarea>
                 </div>
 
-                <div class="submit-container">
+                <!-- Buttons Area -->
+                <div class="submit-container" data-html2canvas-ignore="true">
+                    <button type="button" class="btn-pdf" onclick="generatePDF()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span class="lang-ar-text">تحميل التقرير كـ PDF فوراً</span>
+                        <span class="lang-en-text">Download as PDF</span>
+                    </button>
                     <button type="submit" class="btn-submit">
-                        <span class="lang-ar-text">إرسال وحفظ التقييم</span>
-                        <span class="lang-en-text">Submit Evaluation</span>
+                        <span class="lang-ar-text">إرسال التقييم أونلاين</span>
+                        <span class="lang-en-text">Submit Online</span>
                     </button>
                 </div>
             </div>
@@ -734,6 +766,25 @@
                 btns[1].classList.remove('active');
                 btns[0].classList.add('active');
             }
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('reportArea');
+            const branch = document.getElementById('branch_name').value.trim() || 'Branch';
+            const date = new Date().toISOString().slice(0, 10);
+            const filename = `Evaluation-Report_${branch}_${date}.pdf`;
+
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Generate and download PDF directly in user browser
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>
